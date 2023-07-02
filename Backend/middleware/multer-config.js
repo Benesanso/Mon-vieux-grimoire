@@ -1,27 +1,30 @@
 const multer = require('multer');
+const sharp = require('sharp');
 
-// Définition des types MIME acceptés et de leurs extensions correspondantes
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
-  'image/png': 'png'
+  'image/png': 'png',
+  'image/webp': 'webp'
 };
 
-// Configuration du stockage des fichiers
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    // Définition du dossier de destination des fichiers
     callback(null, 'images');
   },
   filename: (req, file, callback) => {
-    // Génération du nom de fichier unique en remplaçant les espaces par des underscores
-    const name = file.originalname.split(' ').join('_');
-    // Récupération de l'extension du fichier en fonction du type MIME
-    const extension = MIME_TYPES[file.mimetype];
-    // Concaténation du nom de fichier, de la date actuelle et de l'extension
-    callback(null, name + Date.now() + '.' + extension);
+    const originalName = file.originalname;
+    let extension = MIME_TYPES[file.mimetype];
+    // Si l'extension est jpg ou jpeg, nous la remplaçons par webp
+    if (extension === 'jpg' || extension === 'jpeg') {
+      extension = 'webp';
+    }
+    // Séparation du nom de fichier et de l'extension
+    const fileNameWithoutExtension = originalName.split('.').slice(0, -1).join('.');
+    // Génération du nouveau nom de fichier avec la date actuelle et la nouvelle extension
+    const newFileName = fileNameWithoutExtension + '_' + Date.now() + '.' + extension;
+    callback(null, newFileName);
   }
 });
 
-// Configuration de Multer avec le stockage défini et la limite à un seul fichier
-module.exports = multer({storage: storage}).single('image');
+module.exports = multer({ storage: storage }).single('image');
