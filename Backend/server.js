@@ -39,7 +39,6 @@ const errorHandler = error => {
   }
 };
 
-app.use(cors()); // Ajout de cors middleware
 const server = http.createServer(app);
 
 //Ecouteur d'évènements

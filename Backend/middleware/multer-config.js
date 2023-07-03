@@ -42,14 +42,17 @@ const resizeAndLimitResolution = (req, res, next) => {
   const maxHeight = 206; // Définissez la hauteur maximale souhaitée ici
 
   sharp(imageFilePath)
-    .resize(maxWidth, maxHeight, { fit: 'inside' }) // Redimensionnez l'image pour qu'elle s'adapte à l'intérieur des dimensions maximales sans déformation
-    .toFile(imageFilePath, (err, info) => {
-      if (err) {
-        // Gérez les erreurs de redimensionnement de l'image
-        return next(err);
-      }
-      next();
-    });
+  .resize(maxWidth, maxHeight, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+  // Redimensionne l'image en utilisant la méthode 'contain', qui préserve le ratio d'aspect
+  // et ajoute une bordure si nécessaire pour respecter les dimensions maximales spécifiées.
+  // La couleur de l'arrière-plan est définie sur blanc (RGB : 255, 255, 255) avec une opacité de 1.
+  .toFile(imageFilePath, (err, info) => {
+    if (err) {
+      // Gérez les erreurs de redimensionnement de l'image
+      return next(err);
+    }
+    next();
+  });
 };
 
 module.exports = { upload, resizeAndLimitResolution };
