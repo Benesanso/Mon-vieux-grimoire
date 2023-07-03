@@ -27,4 +27,30 @@ const storage = multer.diskStorage({
   }
 });
 
+// Middleware multer pour le téléchargement de l'image
+const upload = multer({ storage: storage }).single('image');
+
+// Middleware de redimensionnement et limitation de résolution
+const resizeAndLimitResolution = (req, res, next) => {
+  if (!req.file) {
+    // Vérifiez si une image a été téléchargée
+    return next();
+  }
+
+  const imageFilePath = req.file.path;
+  const maxWidth = 260; // Définissez la largeur maximale souhaitée ici
+  const maxHeight = 206; // Définissez la hauteur maximale souhaitée ici
+
+  sharp(imageFilePath)
+    .resize(maxWidth, maxHeight, { fit: 'inside' }) // Redimensionnez l'image pour qu'elle s'adapte à l'intérieur des dimensions maximales sans déformation
+    .toFile(imageFilePath, (err, info) => {
+      if (err) {
+        // Gérez les erreurs de redimensionnement de l'image
+        return next(err);
+      }
+      next();
+    });
+};
+
+module.exports = { upload, resizeAndLimitResolution };
 module.exports = multer({ storage: storage }).single('image');

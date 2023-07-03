@@ -4,10 +4,10 @@ const User = require('../models/User');
 
 // Inscription de l'utilisateur
 exports.signup = (req, res, next) => {
-    console.log('Signup function called', req.body); // Ajouter cette ligne pour vérifier si la fonction est appelée
+    console.log('Signup function called', req.body); // vérifie si la fonction est appelée
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            console.log('Password hashed:', hash); // Ajouter cette ligne pour vérifier le hachage du mot de passe
+            console.log('Password hashed:', hash); // vérifie le hachage du mot de passe
         const user = new User({
             email: req.body.email,
             password: hash
@@ -22,16 +22,16 @@ exports.signup = (req, res, next) => {
 
 // Connexion de l'utilisateur
 exports.login = (req, res, next) => {
-    console.log('Login function called'); // Ajouter cette ligne pour vérifier si la fonction est appelée
+    console.log('Login function called'); //  vérifie si la fonction est appelée
     User.findOne({ email: req.body.email })
         .then(user => {
-            console.log('User found:', user); // Ajouter cette ligne pour vérifier si l'utilisateur est trouvé
+            console.log('User found:', user); // vérifie si l'utilisateur est trouvé
             if (!user) {
                 return res.status(401).json({ message: 'Paire login/mot de passe incorrecte'});
             }
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
-                    console.log('Password comparison result:', valid); // Ajouter cette ligne pour vérifier le résultat de la comparaison du mot de passe
+                    console.log('Password comparison result:', valid); //  vérifie le résultat de la comparaison du mot de passe
                     if (!valid) {
                         return res.status(401).json({ message: 'Paire login/mot de passe incorrecte' });
                     }

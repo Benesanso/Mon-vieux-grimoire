@@ -2,6 +2,7 @@ const http = require('http');
 const app = require('./app');
 const cors = require('cors');
 
+// Fonction pour normaliser le port
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -17,6 +18,7 @@ const normalizePort = val => {
 const port = normalizePort(process.env.PORT || 4000);
 app.set('port', port);
 
+// Fonction pour gérer les erreurs lors du démarrage du serveur
 const errorHandler = error => {
   if (error.syscall !== 'listen') {
     throw error;
@@ -40,6 +42,7 @@ const errorHandler = error => {
 app.use(cors()); // Ajout de cors middleware
 const server = http.createServer(app);
 
+//Ecouteur d'évènements
 server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
