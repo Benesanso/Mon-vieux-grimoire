@@ -44,7 +44,7 @@ const resizeAndLimitResolution = (req, res, next) => {
   sharp(imageFilePath)
   .resize(maxWidth, maxHeight, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
   // Redimensionne l'image en utilisant la méthode 'contain', qui préserve le ratio d'aspect
-  // et ajoute une bordure si nécessaire pour respecter les dimensions maximales spécifiées.
+ 
   // La couleur de l'arrière-plan est définie sur blanc (RGB : 255, 255, 255) avec une opacité de 1.
   .toFile(imageFilePath, (err, info) => {
     if (err) {
